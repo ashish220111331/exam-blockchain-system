@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { User, Building2, Lock, Mail, Eye, EyeOff, Upload, Calendar, Clock, FileText, Download, CheckCircle, XCircle, LogOut, Shield, AlertCircle, Loader, Link2, RefreshCw, Key } from 'lucide-react';
 
-const API_URL = 'http://localhost:5000/api';
+const API_URL = process.env.REACT_APP_API_URL || 'https://exam-backend-ashish.onrender.com/api';
 
 export default function ExamSystem() {
   const [currentView, setCurrentView] = useState('login');
