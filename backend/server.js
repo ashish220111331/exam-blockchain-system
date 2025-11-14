@@ -14,7 +14,7 @@ app.use(cors({
   origin: [
     'http://localhost:3000',
     'https://exam-blockchain-system.vercel.app',
-    'https://exam-blockchain-system.vercel.app/' // For preview deployments
+    'https://exam-blockchain-system-*.vercel.app' // For preview deployments
   ],
   credentials: true
 }));
