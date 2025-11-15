@@ -15,7 +15,7 @@ app.use(cors({
     'http://localhost:3000',
     'http://localhost:5173',
     'https://exam-blockchain-system.vercel.app',
-    /https:\/\/exam-blockchain-system-.*\.vercel\.app$/ // Regex for all preview deployments
+    /^https:\/\/exam-blockchain-system-.*\.vercel\.app$/ // This regex allows ALL preview URLs
   ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
