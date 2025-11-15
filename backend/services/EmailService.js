@@ -2,12 +2,22 @@ const { Resend } = require('resend');
 
 class EmailService {
   constructor() {
+    if (!process.env.RESEND_API_KEY) {
+      console.error('❌ RESEND_API_KEY is not set!');
+    }
     this.resend = new Resend(process.env.RESEND_API_KEY);
-    this.fromEmail = process.env.EMAIL_FROM || 'Exam Portal <onboarding@resend.dev>';
+    this.fromEmail = 'Exam Portal <onboarding@resend.dev>';
   }
 
   async sendEmail(to, subject, html) {
     try {
+      console.log('📧 Sending email...');
+      console.log('  To:', to);
+      console.log('  Subject:', subject);
+      console.log('  From:', this.fromEmail);
+      console.log('  API Key exists:', !!process.env.RESEND_API_KEY);
+      console.log('  API Key format:', process.env.RESEND_API_KEY?.substring(0, 5) + '...');
+
       const data = await this.resend.emails.send({
         from: this.fromEmail,
         to: to,
@@ -15,11 +25,15 @@ class EmailService {
         html: html
       });
 
-      console.log('Email sent:', data.id);
+      console.log('✅ Email sent successfully!');
+      console.log('  Email ID:', data.id);
       return { success: true, messageId: data.id };
     } catch (error) {
-      console.error('Email error:', error);
-      return { success: false, error: error.message };
+      console.error('❌ Email sending FAILED!');
+      console.error('  Error message:', error.message);
+      console.error('  Error name:', error.name);
+      console.error('  Full error:', error);
+      throw error;
     }
   }
 
