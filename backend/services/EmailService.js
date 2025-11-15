@@ -16,23 +16,34 @@ class EmailService {
       console.log('  Subject:', subject);
       console.log('  From:', this.fromEmail);
       console.log('  API Key exists:', !!process.env.RESEND_API_KEY);
-      console.log('  API Key format:', process.env.RESEND_API_KEY?.substring(0, 5) + '...');
+      console.log('  API Key starts with:', process.env.RESEND_API_KEY?.substring(0, 5));
 
-      const data = await this.resend.emails.send({
+      const response = await this.resend.emails.send({
         from: this.fromEmail,
         to: to,
         subject: subject,
         html: html
       });
 
-      console.log('✅ Email sent successfully!');
-      console.log('  Email ID:', data.id);
-      return { success: true, messageId: data.id };
+      console.log('📨 Resend API Response:', JSON.stringify(response, null, 2));
+
+      if (response.error) {
+        console.error('❌ Resend returned an error:', response.error);
+        throw new Error(response.error.message || 'Email sending failed');
+      }
+
+      if (response.data && response.data.id) {
+        console.log('✅ Email sent successfully!');
+        console.log('  Email ID:', response.data.id);
+        return { success: true, messageId: response.data.id };
+      } else {
+        console.log('⚠️  Unexpected response format:', response);
+        return { success: true, messageId: 'sent' };
+      }
     } catch (error) {
       console.error('❌ Email sending FAILED!');
       console.error('  Error message:', error.message);
-      console.error('  Error name:', error.name);
-      console.error('  Full error:', error);
+      console.error('  Error stack:', error.stack);
       throw error;
     }
   }
