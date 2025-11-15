@@ -13,9 +13,9 @@ app.use(compression());
 app.use(cors({
   origin: [
     'http://localhost:3000',
-    'http://localhost:5173',
     'https://exam-blockchain-system.vercel.app',
-    /^https:\/\/exam-blockchain-system-.*\.vercel\.app$/ // This regex allows ALL preview URLs
+    'https://exam-blockchain-system-ashish220111331s-projects.vercel.app',
+    /^https:\/\/exam-blockchain-system.*\.vercel\.app$/
   ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
