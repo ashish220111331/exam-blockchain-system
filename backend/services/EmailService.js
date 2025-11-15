@@ -1,29 +1,22 @@
-const nodemailer = require('nodemailer');
+const { Resend } = require('resend');
 
 class EmailService {
   constructor() {
-    this.transporter = nodemailer.createTransport({
-      host: process.env.EMAIL_HOST || 'smtp.gmail.com',
-      port: process.env.EMAIL_PORT || 587,
-      secure: false,
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASSWORD
-      }
-    });
+    this.resend = new Resend(process.env.RESEND_API_KEY);
+    this.fromEmail = process.env.EMAIL_FROM || 'Exam Portal <onboarding@resend.dev>';
   }
 
   async sendEmail(to, subject, html) {
     try {
-      const info = await this.transporter.sendMail({
-        from: process.env.EMAIL_FROM || '"Exam Portal" <noreply@examportal.com>',
-        to,
-        subject,
-        html
+      const data = await this.resend.emails.send({
+        from: this.fromEmail,
+        to: to,
+        subject: subject,
+        html: html
       });
 
-      console.log('Email sent:', info.messageId);
-      return { success: true, messageId: info.messageId };
+      console.log('Email sent:', data.id);
+      return { success: true, messageId: data.id };
     } catch (error) {
       console.error('Email error:', error);
       return { success: false, error: error.message };
@@ -200,7 +193,7 @@ class EmailService {
             </div>
 
             <center>
-              <a href="http://localhost:3000" class="button">Go to Dashboard</a>
+              <a href="https://exam-blockchain-system.vercel.app" class="button">Go to Dashboard</a>
             </center>
 
             <p style="margin-top: 30px;">If you have any questions, feel free to contact our support team.</p>
